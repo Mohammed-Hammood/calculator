@@ -34,6 +34,7 @@ const Results = (returnValue:boolean=false):void|string => {
     }
     if(returnValue)return operation.toString();
 }
+
 const Outputs = ():void => {
     results = operation.toString();
     if(resultsContainer)resultsContainer.innerText = results;
