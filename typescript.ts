@@ -5,59 +5,75 @@ const bracketsKeys:string = "( )";
 const memoryKeys:string[] = ["MC",  "MS", "MR", "M+", "M-"];
 let operation:string = '';
 let prevOperation:string = "";
-let memory:string = "";
+let memory:string = "0";
 let results:string = "";
 let rvt:boolean = false;
  
 const handleClickedEvent:any = (e:any):void => {
     const pressedKey:string = e.target.id ;
     let operationLen:number = operation.toString().length;
-    if(operation.toString().includes("Infinity")){operation = "";}
+    if(operation.toString().includes("Infinity" || "NaN")){operation = "";}
+
     if(pressedKey ==='C'){operation = operation.slice(0, operationLen - 1);}
     else if(pressedKey ==='AC'){operation = '';}
     else if(pressedKey ==='+/-'){switchSigns();}
     else if(pressedKey === "="){Results();}
     else if(pressedKey ==='Rvt' && rvt ){operation = prevOperation;}
-    else if(operationKeys.includes(pressedKey) || numbersKeys.includes(pressedKey) || bracketsKeys.includes(pressedKey)){rvt = false; operation += pressedKey;}
+    else if(operationKeys.includes(pressedKey) || bracketsKeys.includes(pressedKey)){operation+= pressedKey;rvt = false}
+    else if(numbersKeys.includes(pressedKey)){rvt = false; operation = validateLength(operation, pressedKey);}
     else if(memoryKeys.includes(pressedKey)){handleMemory(pressedKey);}
     RVT();
     Outputs();
 }
-const Results = ():void => {
+const Results = (returnValue:boolean=false):void|string => {
     prevOperation = operation;
-    console.log(validateInput(), typeof (operation), operation)
     if(validateInput()){
         rvt = true;
-        operation = eval(operation).toString();
+        operation = eval(operation || "0").toString();
+        operation = validateLength(operation);
     }
+    if(returnValue)return operation.toString();
 }
 const Outputs = ():void => {
     results = operation.toString();
     if(resultsContainer)resultsContainer.innerText = results;
 } 
+const validateLength = (Num:string, AddedNum?:string):string => {
+    if(AddedNum){Num += AddedNum;}
+    if(Num.includes('.')){
+        let decimalPos:number = Num.indexOf(".");
+        let numAfterDecimal:number = Num.length - (decimalPos + 1);
+        if(numAfterDecimal > 8){
+            Num = Num.slice(0, decimalPos) + Num.slice(decimalPos, 9 + decimalPos); 
+        }
+    }
+    return Num;
+}
 const handleMemory = (key:string):void => {
     
     if(key === 'MS'){
-        memory = validateInput()?eval(operation):memory;
+        if(validateInput()){
+            memory = Results(true)|| memory;
+        }
     }else if(key === 'MC'){
         //MC memory clear, sets memory to 0
-        memory = "";
+        memory = "0";
     }else if(key === "MR"){
         // MR: memory recall, recalls the memory to the display
         operation = memory;
     }else if(key === "M+"){
-        // M+: adds the number on display to the memory and puts the result into the memory
-        if(validateInput()){
-            memory += eval(operation);
-            operation = memory;
-        } 
+        // M+: adds the number on display to the memory and puts the result into the memory  
+            if(validateInput()){
+                memory = (parseFloat(memory || "0") + parseFloat(Results(true) || "0")).toString();
+                operation = validateLength(memory) ;
+            }     
     }else if(key === "M-"){
-        //M-:  aubtracts the currenty value from value in the memory and puts the results into the memory
-       
+        //M-:  aubtracts the currenty value from value in the memory and puts the results into the memory  
         if(validateInput()){
-            memory = (parseInt(memory) - eval(operation)).toString();
+            memory = (parseFloat(memory) - parseFloat(Results(true) || "0") ).toString();
+            console.log(memory)
             operation = memory;
-        }
+        }     
     }
 }
 const switchSigns = ():void => {
