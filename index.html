@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.freefavicon.com%2Ffreefavicons%2Fobjects%2Fcalculator-512-279671.png&f=1&nofb=1" />
+    <title>Calculator</title>
+    <link href="styles.css" rel="stylesheet" />
+</head>
+<body>
+  <div class="main-container">
+        <div class="calculator-container">
+            <div class="results" id="results"></div>
+            <div class="buttons-container">
+                <div class="first-column">
+                    <button onclick="handleClickedEvent(event)" type="button" id="MC" title="(Memory Clear) sets memory to 0">MC</button>
+                    <button onclick="handleClickedEvent(event)" type="button" id="MS" title="(Memory Store) puts the number on display into the memory">MS</button>
+                    <button onclick="handleClickedEvent(event)" type="button" id="MR" title="(Memory Recall) recalls the number in the memory to the display">MR</button>
+                    <button onclick="handleClickedEvent(event)" type="button" id="M+" title="(Memory Plus) adds the number on display to the memory and puts the result into the memory">M+</button>
+                    <button onclick="handleClickedEvent(event)" type="button" id="M-" title="(Memory Minus) aubtracts the currenty value from value in the memory and adds the results to the memory">M-</button>
+                </div>
+                <div class="second-column">
+                        <div class="first-row">
+                            <button onclick="handleClickedEvent(event)" type="button" id="C" title="Clear last entry">C</button>
+                            <button onclick="handleClickedEvent(event)" type="button" id="AC" title="All clear">AC</button>
+                            <button onclick="handleClickedEvent(event)" type="button" id="<-">&#60-</button>
+                            <button class="disabled" onclick="handleClickedEvent(event)" type="button" id="Rvt">Rvt</button>
+                        </div>
+                        <div class="second-row">
+                            <button onclick="handleClickedEvent(event)" type="button" id="7">7</button>
+                            <button onclick="handleClickedEvent(event)" type="button" id="8">8</button>
+                            <button onclick="handleClickedEvent(event)" type="button" id="9">9</button>
+                            <button onclick="handleClickedEvent(event)" type="button" id="/">/</button>
+                            <button onclick="handleClickedEvent(event)" type="button" id="(">(</button>
+                        </div>
+                        <div class="third-row">
+                            <button onclick="handleClickedEvent(event)" type="button" id="4">4</button>
+                            <button onclick="handleClickedEvent(event)" type="button" id="5">5</button>
+                            <button onclick="handleClickedEvent(event)" type="button" id="6">6</button>
+                            <button onclick="handleClickedEvent(event)" type="button" id="*">*</button>
+                            <button onclick="handleClickedEvent(event)" type="button" id=")">)</button>
+                        </div>
+                        <div class="forth-row">
+                            <div class="first-column">
+                                <div class="first-row">
+                                    <button onclick="handleClickedEvent(event)" type="button" id="1">1</button>
+                                    <button onclick="handleClickedEvent(event)" type="button" id="2">2</button>
+                                    <button onclick="handleClickedEvent(event)" type="button" id="3">3</button>
+                                    <button onclick="handleClickedEvent(event)" type="button" id="-">-</button>
+                                </div>
+                                <div class="second-row">
+                                    <button onclick="handleClickedEvent(event)" type="button" id="0">0</button>
+                                    <button onclick="handleClickedEvent(event)" type="button" id=".">.</button>
+                                    <button onclick="handleClickedEvent(event)" type="button" id="+/-">+/-</button>
+                                    <button onclick="handleClickedEvent(event)" type="button" id="+">+</button>
+                                </div>
+                            </div>
+                            <div class="second-column">
+                                <button onclick="handleClickedEvent(event)" type="button" id="=">=</button>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+  </div>
+    <script src="typescript.js"></script>
+</body>
+</html>
