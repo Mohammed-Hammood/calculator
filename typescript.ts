@@ -1,9 +1,9 @@
 const resultsContainer:HTMLElement|null = document.getElementById('results');
 const numbersKeys:string = "0123456789.";
 const operationKeys:string[] = ["*", "/", "-", "+"];
-const bracketsKeys:string = "( )";
+const bracketsKeys:string[] = ["(",  ")"];
 const memoryKeys:string[] = ["MC",  "MS", "MR", "M+", "M-"];
-let operation:string = '';
+let operation:string = "";
 let prevOperation:string = "";
 let memory:string = "0";
 let results:string = "";
@@ -13,7 +13,6 @@ const handleClickedEvent:any = (e:any):void => {
     const pressedKey:string = e.target.id ;
     let operationLen:number = operation.toString().length;
     if(operation.toString().includes("Infinity" || "NaN")){operation = "";}
-
     if(pressedKey ==='C'){operation = operation.slice(0, operationLen - 1);}
     else if(pressedKey ==='AC'){operation = '';}
     else if(pressedKey ==='+/-'){switchSigns();}
@@ -23,7 +22,7 @@ const handleClickedEvent:any = (e:any):void => {
     else if(numbersKeys.includes(pressedKey)){rvt = false; operation = validateLength(operation, pressedKey);}
     else if(memoryKeys.includes(pressedKey)){handleMemory(pressedKey);}
     RVT();
-    Outputs();
+    Outputs(); 
 }
 const Results = (returnValue:boolean=false):void|string => {
     prevOperation = operation;
@@ -41,14 +40,42 @@ const Outputs = ():void => {
 } 
 const validateLength = (Num:string, AddedNum?:string):string => {
     if(AddedNum){Num += AddedNum;}
-    if(Num.includes('.')){
-        let decimalPos:number = Num.indexOf(".");
-        let numAfterDecimal:number = Num.length - (decimalPos + 1);
-        if(numAfterDecimal > 8){
-            Num = Num.slice(0, decimalPos) + Num.slice(decimalPos, 9 + decimalPos); 
-        }
+    const convertStringToArray = ():string[]=> {
+        let arr:string[] = [], currentNum:string = "";
+        let tempArr:string[] = Num.split('');
+        tempArr.forEach(item => {
+            if(numbersKeys.includes(item)){
+                currentNum += item;
+            }else if(bracketsKeys.includes(item) || operation.includes(item)){
+                arr.push(currentNum);
+                arr.push(item);
+                currentNum = "";
+            }
+        });
+        if(currentNum.length > 0){arr.push(currentNum);}
+        return arr;
     }
-    return Num;
+    const validateEveryNumber = (Arr:string[]):string => {
+        for (let i =0; i < Arr.length; i++){
+            if(Arr[i].includes('.')){
+                let decimalPos:number = Arr[i].indexOf(".");
+                let numAfterDecimal:number = Arr[i].length - (decimalPos + 1);
+                if(numAfterDecimal > 8){
+                    Arr[i] = Arr[i].slice(0, decimalPos) + Arr[i].slice(decimalPos, 9 + decimalPos); 
+                }
+            }else if (!Arr[i].includes(".")){
+                if(Arr[i].length > 12){
+                    Arr[i] = Arr[i].slice(0, 12);
+                }
+            }
+        }
+        let ArrString:string = "";
+        Arr.forEach(value => {ArrString += value; })
+        return ArrString;
+    }
+  
+    const validatedResults = validateEveryNumber(convertStringToArray());
+    return validatedResults;
 }
 const handleMemory = (key:string):void => {
     
@@ -72,7 +99,6 @@ const handleMemory = (key:string):void => {
         //M-:  aubtracts the currenty value from value in the memory and puts the results into the memory  
         if(validateInput()){
             memory = (parseFloat(memory) - parseFloat(Results(true) || "0") ).toString();
-            console.log(memory)
             operation = memory;
         }     
     }
